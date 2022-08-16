@@ -1,6 +1,8 @@
 class KafkaSchema{
-    constructor(config) {
-        console.log(`Configuration for the schema: ${JSON.stringify(config)}`)
+    constructor(config, logCreator = console) {
+        //Setup log
+        logCreator.log(`Configuration for the schema: ${JSON.stringify(config)}`)
+        // this.log.info(`This is: ${this}`)
     }
 }
 

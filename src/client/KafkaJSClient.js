@@ -11,8 +11,15 @@ class JSKafkaClient {
      * kafkajs kafka- Consumer and/or Producer
      * @param topic
      * @param config
+     * @param logCreator
      */
-    constructor(config) {
+    constructor(config, logCreator = null) {
+        this._kafkaStreams = null;
+        // as queue
+        this.messages = []
+        //Setup log
+        this.log = !logCreator ? logCreator : console;
+
         this.config = config;
         if(!config.brokers || config.brokers.length === 0){
             throw new Error("Please provide a broker list in your configuration.");
@@ -63,10 +70,18 @@ class JSKafkaClient {
                 retries: config.retry.retries || 8
             }
         }
-        console.log(`The kafka client config is: ${JSON.stringify(this.clientConfig)}`)
+        this.log.info(`The kafka client config is: ${JSON.stringify(this.clientConfig)}`)
         if (!this.config || typeof this.config !== "object") {
             throw new Error("Config must be a valid object.");
         }
+    }
+
+    /**
+     * overwrites the internal kafkaStreams reference
+     * @param reference
+     */
+    setKafkaStreamsReference(reference) {
+        this._kafkaStreams = reference;
     }
 
     /**
